@@ -3,8 +3,10 @@ package org.example;
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 public class Percolation {
-    private static final int virtualTopPoint = 0;
+    private static final int VIRTUAL_TOP_POINT = 0;
     private static final boolean OPEN = true;
+
+    private static boolean isFictitiousValidationActive = true;
 
     private int numberOfOpenSites = 0;
     private final int virtualBottomPoint;
@@ -12,14 +14,14 @@ public class Percolation {
     private final WeightedQuickUnionUF unionFind;
 
 
-    public Percolation(int n) {
-        if (n <= 0) {
+    public Percolation(int gridSize) {
+        if (gridSize <= 0) {
             throw new IllegalArgumentException("The grid size has to be greater than 0.");
         }
 
-        grid = new boolean[n][n];
+        grid = new boolean[gridSize + 1][gridSize + 1];
 
-        virtualBottomPoint = getNodeNumberFromRowColumn(n, 0);
+        virtualBottomPoint = getNodeNumberFromRowColumn(gridSize, 0);
 
         unionFind = getWeightedQuickUnionUF();
 
@@ -50,7 +52,7 @@ public class Percolation {
         validateInputOutOfBounds(row, col);
 
         int nodeNumber = getNodeNumberFromRowColumn(row, col);
-        return unionFind.find(nodeNumber) == unionFind.find(virtualTopPoint);
+        return unionFind.find(nodeNumber) == unionFind.find(VIRTUAL_TOP_POINT);
     }
 
     public int numberOfOpenSites() {
@@ -58,7 +60,7 @@ public class Percolation {
     }
 
     public boolean percolates() {
-        return unionFind.find(virtualBottomPoint) == unionFind.find(virtualTopPoint);
+        return unionFind.find(virtualBottomPoint) == unionFind.find(VIRTUAL_TOP_POINT);
     }
 
     private WeightedQuickUnionUF getWeightedQuickUnionUF() {
@@ -66,21 +68,15 @@ public class Percolation {
     }
 
     private void openFirstRow() {
+        isFictitiousValidationActive = false;
+
         for (int colIndex = 0; colIndex < grid.length; colIndex++) {
             open(0, colIndex);
         }
 
+        isFictitiousValidationActive = true;
+
         numberOfOpenSites = 0;
-    }
-
-    private void validateInputOutOfBounds(int row, int col) {
-        if (isOutsideBounds(row) || isOutsideBounds(col)) {
-            throw new IllegalArgumentException("The input values (" + row + ", " + col + ") are out of the bounds of the grid.");
-        }
-    }
-
-    private boolean isOutsideBounds(int row) {
-        return row >= grid.length || row < 0;
     }
 
     private void uniteWithOtherOpenedNodes(int row, int col) {
@@ -105,7 +101,7 @@ public class Percolation {
     private void uniteWithTopNode(int row, int col, int nodeNumber) {
         boolean isNodeTopMost = row == 0;
         if (isNodeTopMost) {
-            unionFind.union(virtualTopPoint, nodeNumber);
+            unionFind.union(VIRTUAL_TOP_POINT, nodeNumber);
         } else {
             uniteWithRegularTopNode(nodeNumber, row, col);
         }
@@ -148,12 +144,41 @@ public class Percolation {
     }
 
     private void uniteNodeWithNeighborRowColumn(int row, int col, int nodeNumber) {
+        validateInputOutOfBoundsRealGrid(row, col);
+
+        isFictitiousValidationActive = false;
         if (!isOpen(row, col)) {
             return;
         }
+        isFictitiousValidationActive = true;
 
         int leftNodeNumber = getNodeNumberFromRowColumn(row, col);
         unionFind.union(nodeNumber, leftNodeNumber);
+    }
+
+
+    private void validateInputOutOfBounds(int row, int col) {
+        if (!isFictitiousValidationActive) {
+            return;
+        }
+
+        if (isOutsideBounds(row) || isOutsideBounds(col)) {
+            throw new IllegalArgumentException("The input values (" + row + ", " + col + ") are out of the bounds of the fictitious grid.");
+        }
+    }
+
+    private void validateInputOutOfBoundsRealGrid(int row, int col) {
+        if (isOutsideBoundsRealGrid(row) || isOutsideBoundsRealGrid(col)) {
+            throw new IllegalArgumentException("The input values (" + row + ", " + col + ") are out of the bounds of the real grid.");
+        }
+    }
+
+    private boolean isOutsideBoundsRealGrid(int value) {
+        return value >= grid.length || value < 0;
+    }
+
+    private boolean isOutsideBounds(int value) {
+        return value > grid.length || value <= 0;
     }
 
     private int getNodeNumberFromRowColumn(int row, int col) {

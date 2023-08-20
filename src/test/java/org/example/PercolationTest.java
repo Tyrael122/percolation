@@ -8,6 +8,23 @@ class PercolationTest {
     private static final int gridSize = 5;
 
     @Test
+    void shouldOpenAtLimit() {
+        Percolation percolation = new Percolation(gridSize);
+
+        percolation.open(1, gridSize);
+        percolation.open(1, 1);
+    }
+
+    @Test
+    void shouldNotOpenAtLimit() {
+        Percolation percolation = new Percolation(gridSize);
+
+        assertThrows(IllegalArgumentException.class, () -> percolation.open(0, 1));
+        assertThrows(IllegalArgumentException.class, () -> percolation.open(0, 0));
+        assertThrows(IllegalArgumentException.class, () -> percolation.open(1, 0));
+    }
+
+    @Test
     void shouldPercolateWithOpenedStraightLine() {
         Percolation percolation = new Percolation(gridSize);
         for (int rowIndex = 0; rowIndex < gridSize; rowIndex++) {
