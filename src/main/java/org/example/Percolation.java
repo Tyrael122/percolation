@@ -1,28 +1,27 @@
 package org.example;
 
-import edu.princeton.cs.algs4.QuickFindUF;
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 public class Percolation {
-    private int numberOfOpenSites = 0;
+    private static final int virtualTopPoint = 0;
+    private static final boolean OPEN = true;
 
-    private final int VIRTUAL_BOTTOM_POINT;
-    private final int VIRTUAL_TOP_POINT = 0;
-    private static final int OPEN = 1;
-    private final int[][] grid;
+    private int numberOfOpenSites = 0;
+    private final int virtualBottomPoint;
+    private final boolean[][] grid;
     private final WeightedQuickUnionUF unionFind;
 
 
     public Percolation(int n) {
-        grid = new int[n][n];
+        grid = new boolean[n][n];
 
-        VIRTUAL_BOTTOM_POINT = getNodeNumberFromRowColumn(n, 0);
+        virtualBottomPoint = getNodeNumberFromRowColumn(n, 0);
 
         unionFind = getWeightedQuickUnionUF();
     }
 
     private WeightedQuickUnionUF getWeightedQuickUnionUF() {
-        return new WeightedQuickUnionUF(VIRTUAL_BOTTOM_POINT + 1);
+        return new WeightedQuickUnionUF(virtualBottomPoint + 1);
     }
 
     public void open(int row, int col) {
@@ -55,7 +54,7 @@ public class Percolation {
 
     public boolean isFull(int row, int col) {
         int nodeNumber = getNodeNumberFromRowColumn(row, col);
-        return unionFind.find(nodeNumber) == unionFind.find(VIRTUAL_TOP_POINT);
+        return unionFind.find(nodeNumber) == unionFind.find(virtualTopPoint);
     }
 
     public int numberOfOpenSites() {
@@ -63,7 +62,7 @@ public class Percolation {
     }
 
     public boolean percolates() {
-        return unionFind.find(VIRTUAL_BOTTOM_POINT) == unionFind.find(VIRTUAL_TOP_POINT);
+        return unionFind.find(virtualBottomPoint) == unionFind.find(virtualTopPoint);
     }
 
     private void uniteWithOtherOpenedNodes(int row, int col) {
@@ -79,7 +78,7 @@ public class Percolation {
     private void uniteWithBottomNode(int row, int col, int nodeNumber) {
         boolean isNodeBottomMost = row == grid.length - 1;
         if (isNodeBottomMost) {
-            unionFind.union(VIRTUAL_BOTTOM_POINT, nodeNumber);
+            unionFind.union(virtualBottomPoint, nodeNumber);
         } else {
             uniteWithRegularBottomNode(nodeNumber, row, col);
         }
@@ -88,7 +87,7 @@ public class Percolation {
     private void uniteWithTopNode(int row, int col, int nodeNumber) {
         boolean isNodeTopMost = row == 0;
         if (isNodeTopMost) {
-            unionFind.union(VIRTUAL_TOP_POINT, nodeNumber);
+            unionFind.union(virtualTopPoint, nodeNumber);
         } else {
             uniteWithRegularTopNode(nodeNumber, row, col);
         }
