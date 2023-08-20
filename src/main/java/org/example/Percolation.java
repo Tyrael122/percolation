@@ -27,11 +27,23 @@ public class Percolation {
     }
 
     public void open(int row, int col) {
+        if (isInputOutOfBounds(row, col)) {
+            return;
+        }
+
         grid[row][col] = OPEN;
 
         numberOfOpenSites++;
 
         uniteWithOtherOpenedNodes(row, col);
+    }
+
+    private boolean isInputOutOfBounds(int row, int col) {
+        return isOutsideBounds(row) || isOutsideBounds(col);
+    }
+
+    private boolean isOutsideBounds(int row) {
+        return row >= grid.length || row < 0;
     }
 
     public boolean isOpen(int row, int col) {
