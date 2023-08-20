@@ -22,10 +22,8 @@ public class Percolation {
         virtualBottomPoint = getNodeNumberFromRowColumn(n, 0);
 
         unionFind = getWeightedQuickUnionUF();
-    }
 
-    private WeightedQuickUnionUF getWeightedQuickUnionUF() {
-        return new WeightedQuickUnionUF(virtualBottomPoint + 1);
+        openFirstRow();
     }
 
     public void open(int row, int col) {
@@ -75,6 +73,18 @@ public class Percolation {
 
     public boolean percolates() {
         return unionFind.find(virtualBottomPoint) == unionFind.find(virtualTopPoint);
+    }
+
+    private WeightedQuickUnionUF getWeightedQuickUnionUF() {
+        return new WeightedQuickUnionUF(virtualBottomPoint + 1);
+    }
+
+    private void openFirstRow() {
+        for (int colIndex = 0; colIndex <= grid.length; colIndex++) {
+            open(0, colIndex);
+        }
+
+        numberOfOpenSites = 0;
     }
 
     private void uniteWithOtherOpenedNodes(int row, int col) {

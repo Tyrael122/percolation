@@ -56,7 +56,7 @@ public class PercolationStats {
     }
 
     private double getPercolationThresholdEstimate() {
-        Percolation percolation = new Percolation(gridSize);
+        Percolation percolation = new Percolation(gridSize + 1);
         while (!percolation.percolates()) {
             openRandomSite(percolation);
         }

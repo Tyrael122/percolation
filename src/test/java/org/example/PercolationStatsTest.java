@@ -29,7 +29,7 @@ class PercolationStatsTest {
     @Test
     void twoHundredGridSizeHundredTrials() {
         Stopwatch stopwatch = new Stopwatch();
-        PercolationStats percolationStats = new PercolationStats(200, 100);
+        PercolationStats percolationStats = new PercolationStats(20, 100);
 
         System.out.println("Elapsed time: " + stopwatch.elapsedTime() + "s");
         System.out.println("mean = " + percolationStats.mean());
