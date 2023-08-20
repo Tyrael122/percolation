@@ -13,6 +13,10 @@ public class Percolation {
 
 
     public Percolation(int n) {
+        if (n <= 0) {
+            throw new IllegalArgumentException("The grid size has to be greater than 0.");
+        }
+
         grid = new boolean[n][n];
 
         virtualBottomPoint = getNodeNumberFromRowColumn(n, 0);
@@ -26,7 +30,7 @@ public class Percolation {
 
     public void open(int row, int col) {
         if (isInputOutOfBounds(row, col)) {
-            return;
+            throw new IllegalArgumentException("The input values are out of the bounds of the grid.");
         }
 
         if (isOpen(row, col)) {
@@ -49,10 +53,18 @@ public class Percolation {
     }
 
     public boolean isOpen(int row, int col) {
+        if (isInputOutOfBounds(row, col)) {
+            throw new IllegalArgumentException("The input values are out of the bounds of the grid.");
+        }
+
         return grid[row][col] == OPEN;
     }
 
     public boolean isFull(int row, int col) {
+        if (isInputOutOfBounds(row, col)) {
+            throw new IllegalArgumentException("The input values are out of the bounds of the grid.");
+        }
+
         int nodeNumber = getNodeNumberFromRowColumn(row, col);
         return unionFind.find(nodeNumber) == unionFind.find(virtualTopPoint);
     }

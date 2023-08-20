@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class PercolationTest {
     private static final int gridSize = 5;
+
     @Test
     void shouldPercolateWithOpenedStraightLine() {
         Percolation percolation = new Percolation(gridSize);
