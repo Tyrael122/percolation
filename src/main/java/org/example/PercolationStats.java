@@ -65,13 +65,13 @@ public class PercolationStats {
     }
 
     private void openRandomSite(Percolation percolation) {
-        int row = (int) getRandomNumberUpTo(gridSize);
-        int col = (int) getRandomNumberUpTo(gridSize);
+        int row = (int) getRandomNumberUpTo(gridSize + 1);
+        int col = (int) getRandomNumberUpTo(gridSize + 1);
 
         percolation.open(row, col);
     }
 
     private static double getRandomNumberUpTo(int max) {
-        return StdRandom.uniformDouble(0, max);
+        return StdRandom.uniformDouble(1, max);
     }
 }

@@ -66,7 +66,7 @@ public class Percolation {
     }
 
     private void openFirstRow() {
-        for (int colIndex = 0; colIndex <= grid.length; colIndex++) {
+        for (int colIndex = 0; colIndex < grid.length; colIndex++) {
             open(0, colIndex);
         }
 
