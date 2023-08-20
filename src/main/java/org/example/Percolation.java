@@ -21,7 +21,7 @@ public class Percolation {
 
         grid = new boolean[gridSize + 1][gridSize + 1];
 
-        virtualBottomPoint = getNodeNumberFromRowColumn(gridSize, 0);
+        virtualBottomPoint = 1 + getNodeNumberFromRowColumn(gridSize, gridSize + 1);
 
         unionFind = getWeightedQuickUnionUF();
 
@@ -109,42 +109,32 @@ public class Percolation {
 
     private void uniteWithRegularBottomNode(int nodeNumber, int row, int col) {
         int bottomNodeRowIndex = row + 1;
-        if (bottomNodeRowIndex >= grid.length) {
-            return;
-        }
 
         uniteNodeWithNeighborRowColumn(bottomNodeRowIndex, col, nodeNumber);
     }
 
     private void uniteWithRegularTopNode(int nodeNumber, int row, int col) {
         int topNodeRowIndex = row - 1;
-        if (topNodeRowIndex < 0) {
-            return;
-        }
 
         uniteNodeWithNeighborRowColumn(topNodeRowIndex, col, nodeNumber);
     }
 
     private void uniteWithRightNode(int nodeNumber, int row, int col) {
         int rightNodeColIndex = col + 1;
-        if (rightNodeColIndex >= grid.length) {
-            return;
-        }
 
         uniteNodeWithNeighborRowColumn(row, rightNodeColIndex, nodeNumber);
     }
 
     private void uniteWithLeftNode(int nodeNumber, int row, int col) {
         int leftNodeColIndex = col - 1;
-        if (leftNodeColIndex < 0) {
-            return;
-        }
 
         uniteNodeWithNeighborRowColumn(row, leftNodeColIndex, nodeNumber);
     }
 
     private void uniteNodeWithNeighborRowColumn(int row, int col, int nodeNumber) {
-        validateInputOutOfBoundsRealGrid(row, col);
+        if (isInputOutOfBoundsRealGrid(row, col)) {
+            return;
+        }
 
         isFictitiousValidationActive = false;
         if (!isOpen(row, col)) {
@@ -167,10 +157,8 @@ public class Percolation {
         }
     }
 
-    private void validateInputOutOfBoundsRealGrid(int row, int col) {
-        if (isOutsideBoundsRealGrid(row) || isOutsideBoundsRealGrid(col)) {
-            throw new IllegalArgumentException("The input values (" + row + ", " + col + ") are out of the bounds of the real grid.");
-        }
+    private boolean isInputOutOfBoundsRealGrid(int row, int col) {
+        return isOutsideBoundsRealGrid(row) || isOutsideBoundsRealGrid(col);
     }
 
     private boolean isOutsideBoundsRealGrid(int value) {
@@ -182,6 +170,6 @@ public class Percolation {
     }
 
     private int getNodeNumberFromRowColumn(int row, int col) {
-        return (grid.length * row) + (col + 1);
+        return grid.length * row + col;
     }
 }
