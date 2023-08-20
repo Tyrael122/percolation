@@ -1,5 +1,6 @@
 package org.example;
 
+import edu.princeton.cs.algs4.QuickFindUF;
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 public class Percolation {
@@ -7,8 +8,6 @@ public class Percolation {
 
     private final int VIRTUAL_BOTTOM_POINT;
     private final int VIRTUAL_TOP_POINT = 0;
-
-    private static final int BLOCKED = 0;
     private static final int OPEN = 1;
     private final int[][] grid;
     private final WeightedQuickUnionUF unionFind;
@@ -28,6 +27,10 @@ public class Percolation {
 
     public void open(int row, int col) {
         if (isInputOutOfBounds(row, col)) {
+            return;
+        }
+
+        if (isOpen(row, col)) {
             return;
         }
 
